@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Cloudstudio\Ollama\Facades\Ollama;
-use Illuminate\Console\BufferedConsoleOutput;
 
 class OllamaService
 {
