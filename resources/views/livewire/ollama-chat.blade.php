@@ -11,8 +11,18 @@
             <flux:navlist.item icon="plus" href="/" current>
                 New Chat
             </flux:navlist.item>
-            <flux:navlist.group expandable heading="History" class="grid mt-4">
-                <flux:navlist.item href="#">Coming soon</flux:navlist.item>
+            <flux:navlist.group expandable heading="Recent Chats" class="grid mt-4">
+                @foreach ($chats as $chat)
+                    <flux:navlist.item class="flex items-center gap-2"
+                        wire:click="loadChat('{{ $chat['meta']['fileName'] }}')">
+                        <flux:tooltip content="Started on {{ date('d/m/y H:i', $chat['meta']['created_at']) }}">
+                            <flux:icon name="check" class="inline-block size-4" />
+                        </flux:tooltip>
+                        <span>
+                            {{ $chat['title'] }}
+                        </span>
+                    </flux:navlist.item>
+                @endforeach
             </flux:navlist.group>
         </flux:navlist>
 
