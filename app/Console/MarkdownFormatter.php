@@ -40,7 +40,7 @@ class MarkdownFormatter
                 $counter++;
                 return $result;
             }, $matches[2]);
-            return "<div class=\"ml-2 mb-4\">{$content}</div>";
+            return "<div class=\"ml-2\">{$content}</div>";
         }, $html);
     }
 
@@ -48,7 +48,7 @@ class MarkdownFormatter
     {
         return preg_replace_callback('/<ul>(.*?)<\/ul>/s', function ($matches) {
             $content = preg_replace('/<li>(.*?)<\/li>/s', '<div>• $1</div>', $matches[1]);
-            return "<div class=\"ml-2 mb-4\">{$content}</div>";
+            return "<div class=\"ml-2\">{$content}</div>";
         }, $html);
     }
 
