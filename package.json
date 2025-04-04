@@ -2,14 +2,19 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "lint-css": "prettier --write resources/css",
+        "lint-js": "prettier --write resources/js",
+        "lint-php": "vendor/bin/php-cs-fixer fix",
         "build": "vite build",
         "dev": "vite"
     },
     "devDependencies": {
+        "@shufo/prettier-plugin-blade": "^1.15.3",
         "@tailwindcss/vite": "^4.0.0",
-        "alpinejs": "^3.14.9",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.2.0",
+        "prettier": "^3.5.3",
+        "prettier-plugin-tailwindcss": "^0.6.11",
         "tailwindcss": "^4.0.0",
         "vite": "^6.0.11"
     }
