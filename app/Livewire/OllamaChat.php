@@ -66,7 +66,7 @@ class OllamaChat extends Component
 
             $this->messages[] = [
                 'role' => 'assistant',
-                'content' => $response['message']['content']
+                'content' => str($response['message']['content'])->markdownWithHighlight()
             ];
 
             $this->updateChat();
@@ -89,6 +89,7 @@ class OllamaChat extends Component
             'meta' => [
                 'model' => $this->selectedModel,
                 'agent' => $this->agent,
+                'fileName' => $this->fileName,
                 'created_at' => now()->timestamp
             ],
             'messages' => $this->messages

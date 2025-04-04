@@ -52,17 +52,17 @@
         </flux:button>
     </flux:header>
 
-    <flux:main>
+    <flux:main class="lg:h-screen">
 
         <section class="h-full flex flex-col">
             <div class="flex-1 overflow-y-auto mb-4 space-y-4">
                 @foreach ($messages as $message)
                     <div class="flex {{ $message['role'] === 'user' ? 'justify-end' : 'justify-start' }}">
                         <section @class([
-                            'max-w-[80%] rounded-lg p-4',
+                            'chat-message max-w-[80%] rounded-lg p-4',
                             'bg-gray-50 dark:bg-zinc-600' => $message['role'] === 'user',
                             'bg-gray-100 dark:bg-zinc-900' => $message['role'] === 'assistant',
-                        ]) <span>{{ $message['content'] }}</span>
+                        ]) <span>{!! $message['content'] !!}</span>
                         </section>
                     </div>
                 @endforeach
@@ -76,7 +76,7 @@
             </div>
 
             <div class="flex flex-col gap-2">
-                <flux:textarea wire:model="input" placeholder="Type your message..." class="flex-1" />
+                <flux:textarea rows="2" wire:model="input" placeholder="Type your message..." class="flex-1" />
 
                 <flux:button wire:click="sendMessage" :loading="$isLoading" variant="primary"
                     class="max-w-64 self-end">

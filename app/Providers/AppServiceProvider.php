@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Stringable;
+use ParsedownExtra;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Stringable::macro('markdownWithHighlight', function () {
+            $parsedown = new ParsedownExtra();
+            $parsedown->setSafeMode(true);
+
+            return new Stringable($parsedown->text($this->value));
+        });
     }
 }

@@ -8,6 +8,7 @@
         "php": "^8.2",
         "cloudstudio/ollama-laravel": "^1.1",
         "erusev/parsedown": "^1.7",
+        "erusev/parsedown-extra": "^0.8.1",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.1",
