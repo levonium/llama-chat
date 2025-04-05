@@ -1,4 +1,4 @@
-# LLAMA-CHAT
+# Llama Chat
 
 A command-line and simple user interface for interacting with local [Ollama](https://ollama.com) models.
 
@@ -34,6 +34,8 @@ To use this application, ensure the following:
 
 ## User Interface (UI)
 
+![llama-chat-screenshot](https://raw.githubusercontent.com/levonium/llama-chat/refs/heads/main/public/images/llama-chat.jpg)
+
 1. Start the server by running:
 
 ```bash
@@ -49,12 +51,12 @@ To use this application, ensure the following:
 
 ### Available Commands
 
-#### `ollama:chat`
+#### `llama:chat`
 
 Start a chat session with an AI model.
 
 ```bash
-php artisan ollama:chat --model=llama3.2 --agent="You are a helpful assistant." --i --f
+php artisan llama:chat --model=llama3.2 --agent="You are a helpful assistant." --i --f
 ```
 
 **Options:**
@@ -64,12 +66,12 @@ php artisan ollama:chat --model=llama3.2 --agent="You are a helpful assistant." 
 - `--i` - Enable interactive mode (default: `false`).
 - `--f` - Return formatted responses (default: `false`).
 
-#### `ollama:ask`
+#### `llama:ask`
 
 Ask a one-off question to an AI model.
 
 ```bash
-php artisan ollama:ask --model=llama3.2 --agent="You are a helpful assistant."
+php artisan llama:ask --model=llama3.2 --agent="You are a helpful assistant."
 ```
 
 **Options:**
@@ -77,20 +79,20 @@ php artisan ollama:ask --model=llama3.2 --agent="You are a helpful assistant."
 - `--model` - Specify the model to use (default: `llama3.2`).
 - `--agent` - Define the agent's description (default: `You are a helpful assistant.`).
 
-#### `ollama:model:list`
+#### `llama:model:list`
 
 List all available (downloaded) models.
 
 ```bash
-php artisan ollama:model:list
+php artisan llama:model:list
 ```
 
-#### `ollama:model:show`
+#### `llama:model:show`
 
 Show detailed information about a specific model.
 
 ```bash
-php artisan ollama:model:show --model=<model_name>
+php artisan llama:model:show --model=<model_name>
 ```
 
 **Options:**

@@ -17,7 +17,7 @@ class OllamaService
         return Ollama::agent($this->agent)
             ->prompt($prompt)
             ->model($this->model)
-            ->options(['temperature' => 0.8])
+            ->options(['temperature' => config('app.ollama.temperature')])
             ->stream($stream)
             ->ask();
     }

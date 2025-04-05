@@ -131,7 +131,7 @@ class OllamaChat extends Component
         $this->chats = collect(Storage::disk('local')->files('chats'))
         ->map(fn ($chat) => json_decode(Storage::disk('local')->get($chat), true))
         ->reverse()
-        ->take(-10);
+        ->take(10);
     }
 
     public function clearChat()

@@ -121,4 +121,9 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    // Ollama configuration
+    'ollama' => [
+        'temperature' => env('OLLAMA_TEMPERATURE', 0.8),
+    ]
 ];

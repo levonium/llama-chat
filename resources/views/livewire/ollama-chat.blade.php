@@ -8,14 +8,9 @@
                              icon="x-mark" />
 
         <flux:brand href="/"
-                    logo="/images/ollama.png"
-                    name="Ollama Chat"
-                    class="px-2 dark:hidden" />
-
-        <flux:brand href="/"
                     logo="/favicon.svg"
-                    name="Ollama Chat"
-                    class="hidden px-2 dark:flex" />
+                    name="Llama Chat"
+                    class="px-2" />
 
         <flux:input variant="filled"
                     placeholder="Search..."

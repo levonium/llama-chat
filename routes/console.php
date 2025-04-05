@@ -18,7 +18,7 @@ use function Laravel\Prompts\table;
 use function Laravel\Prompts\text;
 use function Laravel\Prompts\textarea;
 
-Artisan::command('ollama:ask {--model=llama3.2} {--agent="You are a helpful assistant."}', function (
+Artisan::command('llama:ask {--model=llama3.2} {--agent="You are a helpful assistant."}', function (
     string $model,
     string $agent,
 ) {
@@ -46,7 +46,7 @@ Artisan::command('ollama:ask {--model=llama3.2} {--agent="You are a helpful assi
     }
 })->purpose('Ask a question to a model.');
 
-Artisan::command('ollama:chat {--model=llama3.2} {--agent="You are a helpful assistant."} {--i} {--f}', function (
+Artisan::command('llama:chat {--model=llama3.2} {--agent="You are a helpful assistant."} {--i} {--f}', function (
     string $model,
     string $agent,
     bool $i = false, // interactive
@@ -129,7 +129,7 @@ Artisan::command('ollama:chat {--model=llama3.2} {--agent="You are a helpful ass
     }
 })->purpose('Start a chat with a model.');
 
-Artisan::command('ollama:model:list', function () {
+Artisan::command('llama:model:list', function () {
     $ollama = new OllamaService('llama3.2', 'You are a helpful assistant.');
     $models = $ollama->getModels();
 
@@ -146,7 +146,7 @@ Artisan::command('ollama:model:list', function () {
     );
 });
 
-Artisan::command('ollama:model:show {model?}', function (
+Artisan::command('llama:model:show {model?}', function (
     ?string $model = null
 ) {
     if (!$model) {

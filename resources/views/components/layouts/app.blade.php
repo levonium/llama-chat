@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>{{ $title ?? 'Ollama Chat' }}</title>
+    <title>{{ $title ?? 'Llama Chat' }}</title>
 
     <link rel="shortcut icon"
           href="favicon.svg"
