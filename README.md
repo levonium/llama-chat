@@ -1,10 +1,25 @@
 # LLAMA-CHAT
 
-A command line and simple user interface for interacting with local [ollama](https://ollama.com) models.
+A command-line and simple user interface for interacting with local [Ollama](https://ollama.com) models.
 
-To use the interfaces provided by this application, please make sure that you already have [Ollama](https://github.com/ollama/ollama) installed and you have downloaded at least one model. Refer to Ollama documentation .
+## Prerequisites
 
-## To-do
+To use this application, ensure the following:
+
+1. [Ollama](https://github.com/ollama/ollama) is installed.
+2. At least one model is downloaded. Refer to the [Ollama documentation](https://github.com/ollama/ollama) for guidance.
+
+---
+
+## Features
+
+- **Command-Line Interface (CLI):** Interact with AI models directly from the terminal.
+- **User Interface (UI):** A simple web-based interface for chatting with models.
+- **Customizable Options:** Choose models, agents, and response formats.
+
+---
+
+## To-Do List
 
 - [x] Highlight the selected "recent chat"
 - [x] Enable continuing older conversations
@@ -12,46 +27,55 @@ To use the interfaces provided by this application, please make sure that you al
 - [ ] Add proper syntax highlighting
 - [ ] Improve assistant answer styles
 - [ ] Send message on CTRL/CMD + ENTER
-- [ ] Add search
-- [ ] Add recent chats to CLI option
+- [ ] Add search functionality
+- [ ] Add recent chats to CLI options
 
-## UI
+---
 
-Simply visit the homepage of the installed application and start chatting.
+## User Interface (UI)
 
-One option to start a server is to run `php artisan serve`, then visit `http://127.0.0.1:8000` and start chatting with your preferred model.
+1. Start the server by running:
 
-## CLI
+```bash
+  php artisan serve
+```
 
-Available commands:
+2. Visit the application at `http://127.0.0.1:8000` in your browser.
+3. Start chatting with your preferred model.
 
-`ollama:chat`
+---
 
-Use `ollama:chat` command to start a chat with an AI model.
+## Command-Line Interface (CLI)
+
+### Available Commands
+
+#### `ollama:chat`
+
+Start a chat session with an AI model.
 
 ```bash
 php artisan ollama:chat --model=llama3.2 --agent="You are a helpful assistant." --i --f
-
---model - choose the model you want to chat with, default `llama3.2`
---agent - the agent description, default `You are a helpful assistant.`
---i - interactive mode in which case you will be promoted for model and agent. Default `false`
---f - whether to return formatted or raw responses. If `--f` option is present, the responses will be formatted after being displayed, which will disable the option to see the previous responses. Default `false`
-
-# All command options are optional.
 ```
 
-`ollama:ask`
+**Options:**
 
-Use `ollama:ask` command to ask one-off questions.
+- `--model` - Specify the model to use (default: `llama3.2`).
+- `--agent` - Define the agent's description (default: `You are a helpful assistant.`).
+- `--i` - Enable interactive mode (default: `false`).
+- `--f` - Return formatted responses (default: `false`).
+
+#### `ollama:ask`
+
+Ask a one-off question to an AI model.
 
 ```bash
 php artisan ollama:ask --model=llama3.2 --agent="You are a helpful assistant."
-
---model - choose the model you want to chat with, default `llama3.2`
---agent - the agent description, default `You are a helpful assistant.`
-
-# All command options are optional.
 ```
+
+**Options:**
+
+- `--model` - Specify the model to use (default: `llama3.2`).
+- `--agent` - Define the agent's description (default: `You are a helpful assistant.`).
 
 #### `ollama:model:list`
 
@@ -63,27 +87,72 @@ php artisan ollama:model:list
 
 #### `ollama:model:show`
 
-Show model information.
+Show detailed information about a specific model.
 
 ```bash
-php artisan ollama:model:show --model
-
---model - the model. You skip the model option, but you will be prompted to enter its name right after that.
+php artisan ollama:model:show --model=<model_name>
 ```
+
+**Options:**
+
+- `--model` - Specify the model name. If omitted, you will be prompted to enter it.
+
+---
 
 ## Installation
 
-Run the following commands in the terminal:
+Follow these steps to set up the application:
 
-1. `git clone [repository]` - this will clone the repository
-2. `cd llama-chat` - change the current directory to application's root folder
-3. `cp .env.example .env` - copy the environment file
-4. `php artisan key:generate` - generate an application key
+1. Clone the repository:
 
-That will do it, now you should be able to serve the application.
+    ```bash
+    git clone [repository]
+    ```
 
-Run `php artisan serve` and visit `http://127.0.0.1:8000`.
+2. Navigate to the project directory:
+
+    ```bash
+    cd llama-chat
+    ```
+
+3. Copy the environment file:
+
+    ```bash
+    cp .env.example .env
+    ```
+
+4. Generate the application key:
+
+    ```bash
+    php artisan key:generate
+    ```
+
+5. Start the server:
+
+    ```bash
+    php artisan serve
+    ```
+
+6. Visit `http://127.0.0.1:8000` in your browser.
+
+---
 
 ## Logs
 
-Visit `/llogs` for application logs.
+Access application logs by visiting:
+
+```
+http://127.0.0.1:8000/llogs
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Feel free to submit issues or pull requests to improve the project.
+
+---
+
+## License
+
+This project is licensed under [LICENSE_NAME]. See the `LICENSE` file for details.
