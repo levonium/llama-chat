@@ -29,8 +29,11 @@ pre code {
   border: none;
 }
 
-/* chat messages */
 .chat-message {
+  hr {
+    @apply my-6 border-gray-200 dark:border-gray-700;
+  }
+
   h1,
   h2,
   h3,

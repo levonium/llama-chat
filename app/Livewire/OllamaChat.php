@@ -9,17 +9,18 @@ use Illuminate\Support\Facades\Storage;
 
 class OllamaChat extends Component
 {
-    public $messages        = [];
-    public $input           = '';
-    public $isLoading       = false;
+    public $isLoading = false;
+    public $messages  = [];
+    public $input     = '';
+
+    public $chats     = [];
+    public $file      = '';
+    public $fileName  = '';
+    public $fileTitle = '';
+
+    public $agent           = 'You are a helpful assistant.';
     public $selectedModel   = 'llama3.2:latest';
     public $availableModels = [];
-    public $agent           = 'You are a helpful assistant.';
-
-    public $chats        = [];
-    public $file         = '';
-    public $fileName     = '';
-    public $fileTitle    = '';
 
     private OllamaService $ollamaService;
 
@@ -125,17 +126,20 @@ class OllamaChat extends Component
         Storage::disk('local')->put('chats/'.$this->fileName, json_encode($chatData));
     }
 
-    public function clearChat()
-    {
-        $this->messages = [];
-    }
-
     public function loadChats()
     {
         $this->chats = collect(Storage::disk('local')->files('chats'))
-            ->map(fn ($chat) => json_decode(Storage::disk('local')->get($chat), true))
-            ->reverse()
-            ->take(-10);
+        ->map(fn ($chat) => json_decode(Storage::disk('local')->get($chat), true))
+        ->reverse()
+        ->take(-10);
+    }
+
+    public function clearChat()
+    {
+        $this->messages  = [];
+        $this->file      = '';
+        $this->fileName  = '';
+        $this->fileTitle = '';
     }
 
     public function updatedSelectedModel()
