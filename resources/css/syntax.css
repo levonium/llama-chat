@@ -31,15 +31,39 @@ pre code {
 
 /* chat messages */
 .chat-message {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply mt-6 mb-3 font-bold text-gray-900 dark:text-white;
+  }
+
   ul,
-  ul {
-    @apply list-inside list-disc mb-2;
+  ol {
+    @apply mt-2 mb-3 list-inside;
   }
 
   ol {
-    @apply list-inside list-decimal;
+    @apply list-decimal;
   }
-  ol {
-    list-style-type: decimal;
+  ul {
+    @apply list-disc;
+  }
+
+  blockquote {
+    @apply border-l-4 pl-4 text-gray-500 italic dark:text-gray-400;
+  }
+
+  table {
+    @apply mt-2 mb-3;
+    tr {
+      @apply border-t border-l border-gray-200 dark:border-gray-700;
+    }
+    th,
+    td {
+      @apply border-r border-b border-gray-200 px-4 py-2 dark:border-gray-700;
+    }
   }
 }

@@ -16,10 +16,10 @@ class OllamaChat extends Component
     public $availableModels = [];
     public $agent           = 'You are a helpful assistant.';
 
-    public $chats     = [];
-    public $file      = '';
-    public $fileName  = '';
-    public $fileTitle = '';
+    public $chats        = [];
+    public $file         = '';
+    public $fileName     = '';
+    public $fileTitle    = '';
 
     private OllamaService $ollamaService;
 
@@ -100,6 +100,10 @@ class OllamaChat extends Component
 
     public function loadChat($fileName)
     {
+        $this->fileName  = $fileName;
+
+        $this->dispatch('chat-selected');
+
         $chatData = Storage::disk('local')->get('chats/'.$fileName);
 
         $chatData = json_decode($chatData, true);
