@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Services\OllamaService;
-use Illuminate\Support\Facades\Storage;
+use App\Services\ChatStorage;
 
 class OllamaChat extends Component
 {
@@ -23,10 +23,12 @@ class OllamaChat extends Component
     public $availableModels = [];
 
     private OllamaService $ollamaService;
+    private ChatStorage $chatStorage;
 
     public function boot()
     {
         $this->ollamaService   = new OllamaService($this->selectedModel, $this->agent);
+        $this->chatStorage     = new ChatStorage();
         $this->availableModels = $this->ollamaService->getModels();
         $this->loadChats();
     }
@@ -40,10 +42,13 @@ class OllamaChat extends Component
         $this->isLoading = true;
 
         if (empty($this->messages)) {
-            $this->fileName  = 'chat-'.now()->timestamp.'.json';
+            $this->fileName = $this->chatStorage->saveNewChat(
+                $this->input,
+                $this->selectedModel,
+                $this->agent,
+                $this->messages
+            );
             $this->fileTitle = str($this->input)->title()->limit(24);
-
-            $this->saveChat();
         }
 
         $this->messages[] = [
@@ -70,68 +75,34 @@ class OllamaChat extends Component
                 'content' => str($response['message']['content'])->markdownWithHighlight()
             ];
 
-            $this->updateChat();
+            $this->chatStorage->updateChat($this->fileName, $this->messages);
         } catch (\Exception $e) {
             $this->messages[] = [
                 'role' => 'assistant',
                 'content' => 'Sorry, there was an error processing your request.'
             ];
 
-            $this->updateChat();
+            $this->chatStorage->updateChat($this->fileName, $this->messages);
         } finally {
             $this->isLoading = false;
         }
     }
 
-    public function saveChat()
-    {
-        $chatData = [
-            'title' => $this->fileTitle,
-            'meta' => [
-                'model' => $this->selectedModel,
-                'agent' => $this->agent,
-                'fileName' => $this->fileName,
-                'created_at' => now()->timestamp
-            ],
-            'messages' => $this->messages
-        ];
-
-        $this->file = Storage::disk('local')->put('chats/'.$this->fileName, json_encode($chatData));
-    }
-
     public function loadChat($fileName)
     {
-        $this->fileName  = $fileName;
-
+        $this->fileName = $fileName;
         $this->dispatch('chat-selected');
 
-        $chatData = Storage::disk('local')->get('chats/'.$fileName);
+        $chatData = $this->chatStorage->loadChat($fileName);
 
-        $chatData = json_decode($chatData, true);
-
-        $this->messages = $chatData['messages'];
-
+        $this->messages      = $chatData['messages'];
         $this->selectedModel = $chatData['meta']['model'];
         $this->agent         = $chatData['meta']['agent'];
     }
 
-    public function updateChat()
-    {
-        $chatData = Storage::disk('local')->get('chats/'.$this->fileName);
-
-        $chatData = json_decode($chatData, true);
-
-        $chatData['messages'] = $this->messages;
-
-        Storage::disk('local')->put('chats/'.$this->fileName, json_encode($chatData));
-    }
-
     public function loadChats()
     {
-        $this->chats = collect(Storage::disk('local')->files('chats'))
-        ->map(fn ($chat) => json_decode(Storage::disk('local')->get($chat), true))
-        ->reverse()
-        ->take(10);
+        $this->chats = $this->chatStorage->loadRecentChats();
     }
 
     public function clearChat()

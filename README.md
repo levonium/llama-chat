@@ -1,6 +1,6 @@
 # Llama Chat
 
-A command-line and simple user interface for interacting with local [Ollama](https://ollama.com) models.
+A simple command-line and user interface for interacting with local [Ollama](https://ollama.com) models.
 
 ## Prerequisites
 
@@ -21,14 +21,10 @@ To use this application, ensure the following:
 
 ## To-Do List
 
-- [x] Highlight the selected "recent chat"
-- [x] Enable continuing older conversations
-- [x] Scroll to the bottom of chat messages automatically
 - [ ] Add proper syntax highlighting
 - [ ] Improve assistant answer styles
 - [ ] Send message on CTRL/CMD + ENTER
 - [ ] Add search functionality
-- [ ] Add recent chats to CLI options
 
 ---
 
@@ -146,15 +142,3 @@ Access application logs by visiting:
 ```
 http://127.0.0.1:8000/llogs
 ```
-
----
-
-## Contributing
-
-Contributions are welcome! Feel free to submit issues or pull requests to improve the project.
-
----
-
-## License
-
-This project is licensed under [LICENSE_NAME]. See the `LICENSE` file for details.

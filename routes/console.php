@@ -1,13 +1,13 @@
 <?php
 
 use App\Console\MarkdownFormatter;
+use App\Services\ChatStorage;
 use App\Services\OllamaService;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Carbon;
-use Illuminate\Console\BufferedConsoleOutput;
 use Cloudstudio\Ollama\Facades\Ollama;
+use Illuminate\Console\BufferedConsoleOutput;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Artisan;
 
-use function Termwind\{render, terminal};
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\outro;
@@ -17,6 +17,7 @@ use function Laravel\Prompts\spin;
 use function Laravel\Prompts\table;
 use function Laravel\Prompts\text;
 use function Laravel\Prompts\textarea;
+use function Termwind\{render, terminal};
 
 Artisan::command('llama:ask {--model=llama3.2} {--agent="You are a helpful assistant."}', function (
     string $model,
@@ -52,9 +53,11 @@ Artisan::command('llama:chat {--model=llama3.2} {--agent="You are a helpful assi
     bool $i = false, // interactive
     bool $f = false, // formatted responses
 ) {
-    $ollama    = new OllamaService($model, $agent);
-    $formatter = new MarkdownFormatter();
-    $messages  = [];
+    $ollama      = new OllamaService($model, $agent);
+    $formatter   = new MarkdownFormatter();
+    $messages    = [];
+    $fileName    = '';
+    $chatStorage = new ChatStorage();
 
     if ($i) {
         $model = select(
@@ -83,6 +86,10 @@ Artisan::command('llama:chat {--model=llama3.2} {--agent="You are a helpful assi
             'role' => 'user',
             'content' => $question,
         ];
+
+        if (count($messages) === 1) {
+            $fileName = $chatStorage->saveNewChat($question, $model, $agent, $messages);
+        }
 
         $response = spin(
             message: 'Thinking ...',
@@ -124,6 +131,10 @@ Artisan::command('llama:chat {--model=llama3.2} {--agent="You are a helpful assi
             'role' => 'assistant',
             'content' => $fullResponse,
         ];
+
+        if ($fileName) {
+            $chatStorage->updateChat($fileName, $messages);
+        }
 
         pause('Press ENTER to continue.');
     }
