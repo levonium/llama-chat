@@ -47,7 +47,8 @@
                                 heading="Uploaded Files"
                                 class="mt-4 grid">
                 @forelse ($uploads as $file)
-                    <flux:navlist.item class="group flex items-center justify-between">
+                    <flux:navlist.item wire:click="viewFile('{{ $file['name'] }}')"
+                                       class="group flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <flux:icon name="document"
                                        class="size-4" />
@@ -55,6 +56,7 @@
                                   title="{{ $file['name'] }}">
                                 {{ $file['name'] }}
                             </span>
+                        </div>
                     </flux:navlist.item>
                 @empty
                     <flux:navlist.item disabled>
@@ -154,6 +156,7 @@
                 <div class="mt-2 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-2">
                         <flux:button @click="$refs.fileInput.click()"
+                                     :disabled="$isLoading"
                                      variant="filled"
                                      icon="document-arrow-up"
                                      size="sm"
@@ -166,7 +169,9 @@
                             Attach File
                         </flux:button>
                         @error('uploadedFile')
-                            <span class="text-sm text-red-500">{{ $message }}</span>
+                            <div class="text-sm text-red-500 dark:bg-red-900/20">
+                                {!! nl2br($message) !!}
+                            </div>
                         @enderror
                     </div>
 
@@ -213,6 +218,25 @@
                 {!! str(file_get_contents(resource_path('views/help.blade.php')))->markdown() !!}
             </div>
         </flux:modal>
+
+        <flux:modal name="file-modal"
+                    wire:close="closeFileModal">
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold">{{ $viewingFile }}</h3>
+
+                @if ($fileContent)
+                    <div class="max-h-[60vh] overflow-auto rounded-lg bg-gray-50 p-4 dark:bg-zinc-900">
+                        @if (in_array($fileContent['type'], ['text/plain', 'text/markdown', 'text/html']))
+                            <pre class="whitespace-pre-wrap font-mono text-sm">{{ $fileContent['content'] }}</pre>
+                        @elseif ($fileContent['type'] === 'application/json')
+                            <pre class="whitespace-pre-wrap font-mono text-sm">{{ json_encode(json_decode($fileContent['content']), JSON_PRETTY_PRINT) }}</pre>
+                        @else
+                            <pre class="whitespace-pre-wrap font-mono text-sm">{{ $fileContent['content'] }}</pre>
+                        @endif
+                    </div>
+                @endif
+            </div>
+        </flux:modal>
     </flux:main>
 </div>
 
@@ -232,5 +256,6 @@
         }
         $wire.on('chat-selected', () => setTimeout(() => scrollToBottom()))
         $wire.on('message-added', () => setTimeout(() => scrollToBottom(), 1000))
+        $wire.on('file-selected', () => Flux.modal('file-modal').show())
     </script>
 @endscript

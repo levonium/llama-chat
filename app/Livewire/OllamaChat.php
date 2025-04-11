@@ -27,6 +27,9 @@ class OllamaChat extends Component
     public $uploadedFile  = null;
     public $uploads       = [];
 
+    public $viewingFile   = null;
+    public $fileContent   = null;
+
     public $agent           = 'You are a helpful assistant.';
     public $selectedModel   = 'llama3.2:latest';
     public $availableModels = [];
@@ -42,6 +45,7 @@ class OllamaChat extends Component
     {
         $this->ollamaService   = new OllamaService($this->selectedModel, $this->agent);
         $this->chatStorage     = new ChatStorage();
+        $this->uploadManager   = new ChatUploadManager($this->fileName ?: 'default');
         $this->availableModels = $this->ollamaService->getModels();
         $this->loadRecentChats();
     }
@@ -61,7 +65,8 @@ class OllamaChat extends Component
                 $this->agent,
                 $this->messages
             );
-            $this->fileTitle     = str($this->input)->title()->limit(24);
+
+            $this->fileTitle = str($this->input)->title()->limit(24);
 
             $this->uploadManager = new ChatUploadManager($this->fileName);
             $this->loadUploads();
@@ -88,7 +93,8 @@ class OllamaChat extends Component
         try {
             $response = $this->ollamaService->chat(
                 messages: $this->messages,
-                stream: false
+                stream: false,
+                files: $this->uploads
             );
 
             $this->messages[] = [
@@ -100,7 +106,7 @@ class OllamaChat extends Component
         } catch (\Exception $e) {
             $this->messages[] = [
                 'role' => 'assistant',
-                'content' => 'Sorry, there was an error processing your request.'
+                'content' => 'Sorry, there was an error processing your request. Error details: '.$e->getMessage()
             ];
 
             $this->chatStorage->updateChat($this->fileName, $this->messages);
@@ -111,12 +117,12 @@ class OllamaChat extends Component
 
     public function loadChat($fileName)
     {
-        $this->fileName      = $fileName;
+        $this->fileName = $fileName;
+
         $this->uploadManager = new ChatUploadManager($this->fileName);
         $this->loadUploads();
 
-        $chatData = $this->chatStorage->loadChat($fileName);
-
+        $chatData            = $this->chatStorage->loadChat($fileName);
         $this->messages      = $chatData['messages'];
         $this->selectedModel = $chatData['meta']['model'];
         $this->agent         = $chatData['meta']['agent'];
@@ -138,17 +144,36 @@ class OllamaChat extends Component
 
     public function loadUploads()
     {
-        if ($this->fileName) {
+        // if ($this->fileName) {
+        try {
             $this->uploads = $this->uploadManager->getUploads();
+        } catch (\Exception $e) {
+            $this->addError('uploadedFile', $e->getMessage());
         }
+        // }
+    }
+
+    public function viewFile(string $fileName)
+    {
+        try {
+            $this->viewingFile = $fileName;
+            $this->fileContent = $this->uploadManager->getFileContent($fileName);
+            $this->dispatch('file-selected');
+        } catch (\Exception $e) {
+            $this->addError('fileContent', $e->getMessage());
+        }
+    }
+
+    public function closeFileModal()
+    {
+        $this->viewingFile = null;
+        $this->fileContent = null;
     }
 
     public function updatedFileName()
     {
-        if ($this->fileName) {
-            $this->uploadManager = new ChatUploadManager($this->fileName);
-            $this->loadUploads();
-        }
+        $this->uploadManager = new ChatUploadManager($this->fileName);
+        $this->loadUploads();
     }
 
     public function updatedSelectedModel()
@@ -170,17 +195,26 @@ class OllamaChat extends Component
                 $this->agent,
                 []
             );
-            $this->fileTitle     = 'File Upload';
-            $this->uploadManager = new ChatUploadManager($this->fileName);
-            $this->loadUploads();
+            $this->fileTitle = 'File Upload';
         }
+
+        $this->uploadManager = new ChatUploadManager($this->fileName);
 
         try {
             $result = $this->uploadManager->upload($this->uploadedFile);
             $this->loadUploads();
             $this->uploadedFile = null;
-        } catch (\Exception $e) {
+
+            if ($this->fileTitle === 'File Upload') {
+                $this->fileTitle = pathinfo($result['name'], PATHINFO_FILENAME);
+                $this->chatStorage->updateChatTitle($this->fileName, $this->fileTitle);
+            }
+        } catch (\InvalidArgumentException $e) {
             $this->addError('uploadedFile', $e->getMessage());
+        } catch (\RuntimeException $e) {
+            $this->addError('uploadedFile', 'There was a problem processing your file. Please try a different file. Error details: '.$e->getMessage());
+        } catch (\Exception $e) {
+            $this->addError('uploadedFile', 'An unexpected error occurred. Please try again. Error details: '.$e->getMessage());
         }
     }
 
