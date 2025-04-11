@@ -19,15 +19,6 @@ To use this application, ensure the following:
 
 ---
 
-## To-Do List
-
-- [ ] Add proper syntax highlighting
-- [ ] Improve assistant answer styles
-- [ ] Send message on CTRL/CMD + ENTER
-- [ ] Add search functionality
-
----
-
 ## User Interface (UI)
 
 ![llama-chat-screenshot](https://raw.githubusercontent.com/levonium/llama-chat/refs/heads/main/public/images/llama-chat.jpg)

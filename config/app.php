@@ -125,5 +125,10 @@ return [
     // Ollama configuration
     'ollama' => [
         'temperature' => env('OLLAMA_TEMPERATURE', 0.8),
+        'chats' => [
+            'path' => env('OLLAMA_CHATS_PATH', 'chats'),
+            'uploads' => env('OLLAMA_CHATS_UPLOADS', 'uploads'),
+            'cli_uploads' => env('OLLAMA_CHATS_CLI_FILES', 'cli'),
+        ],
     ]
 ];
