@@ -3,14 +3,13 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class ChatStorage
 {
     public function saveNewChat(string $title, string $model, string $agent, array $messages): string
     {
         $fileName  = 'chat-'.now()->timestamp.'.json';
-        $fileTitle = Str::title(Str::limit($title, 24));
+        $fileTitle = str($title)->title()->limit(24);
 
         $chatData = [
             'title' => $fileTitle,
@@ -33,6 +32,14 @@ class ChatStorage
         $chatData             = Storage::disk('local')->get('chats/'.$fileName);
         $chatData             = json_decode($chatData, true);
         $chatData['messages'] = $messages;
+        Storage::disk('local')->put('chats/'.$fileName, json_encode($chatData));
+    }
+
+    public function updateChatTitle(string $fileName, string $fileTitle): void
+    {
+        $chatData             = Storage::disk('local')->get('chats/'.$fileName);
+        $chatData             = json_decode($chatData, true);
+        $chatData['title']    = $fileTitle;
         Storage::disk('local')->put('chats/'.$fileName, json_encode($chatData));
     }
 

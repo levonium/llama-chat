@@ -42,6 +42,26 @@
                     </flux:navlist.item>
                 @endforelse
             </flux:navlist.group>
+
+            <flux:navlist.group expandable
+                                heading="Uploaded Files"
+                                class="mt-4 grid">
+                @forelse ($uploads as $file)
+                    <flux:navlist.item class="group flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <flux:icon name="document"
+                                       class="size-4" />
+                            <span class="truncate"
+                                  title="{{ $file['name'] }}">
+                                {{ $file['name'] }}
+                            </span>
+                    </flux:navlist.item>
+                @empty
+                    <flux:navlist.item disabled>
+                        No uploaded files
+                    </flux:navlist.item>
+                @endforelse
+            </flux:navlist.group>
         </flux:navlist>
 
         <flux:spacer />
@@ -131,13 +151,33 @@
                                class="flex-1"
                                autofocus />
 
-                <flux:button wire:click="sendMessage"
-                             :disabled="$isLoading"
-                             variant="primary"
-                             icon="arrow-up"
-                             size="sm"
-                             class="!absolute bottom-2 right-2">
-                </flux:button>
+                <div class="mt-2 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                        <flux:button @click="$refs.fileInput.click()"
+                                     variant="filled"
+                                     icon="document-arrow-up"
+                                     size="sm"
+                                     x-data>
+                            <input type="file"
+                                   wire:model="uploadedFile"
+                                   wire:loading.attr="disabled"
+                                   class="hidden"
+                                   x-ref="fileInput">
+                            Attach File
+                        </flux:button>
+                        @error('uploadedFile')
+                            <span class="text-sm text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <flux:button wire:click="sendMessage"
+                                 :disabled="$isLoading"
+                                 variant="primary"
+                                 icon="arrow-up"
+                                 size="sm">
+                        Send
+                    </flux:button>
+                </div>
             </div>
         </section>
 
@@ -151,7 +191,8 @@
                                  option-label="name"
                                  option-value="name">
                         @foreach ($availableModels as $model)
-                            <flux:select.option value="{{ $model['name'] }}">{{ $model['name'] }}</flux:select.option>
+                            <flux:select.option value="{{ $model['name'] }}">{{ $model['name'] }}
+                            </flux:select.option>
                         @endforeach
                     </flux:select>
                     <flux:description>Select the model you want to use.</flux:description>
@@ -168,7 +209,6 @@
         </flux:modal>
 
         <flux:modal name="help">
-
             <div class="chat-message">
                 {!! str(file_get_contents(resource_path('views/help.blade.php')))->markdown() !!}
             </div>
