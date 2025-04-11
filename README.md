@@ -16,6 +16,8 @@ To use this application, ensure the following:
 - **Command-Line Interface (CLI):** Interact with AI models directly from the terminal.
 - **User Interface (UI):** A simple web-based interface for chatting with models.
 - **Customizable Options:** Choose models, agents, and response formats.
+- **File Upload Support:** Upload files through both CLI and UI interfaces.
+- **Chat History:** Maintain and continue previous conversations.
 
 ---
 
@@ -43,15 +45,28 @@ To use this application, ensure the following:
 Start a chat session with an AI model.
 
 ```bash
-php artisan llama:chat --model=llama3.2 --agent="You are a helpful assistant." --i --f
+php artisan llama:chat --model=llama3.2 --agent="You are a helpful assistant." --upload=filename.txt --i --f
 ```
 
 **Options:**
 
 - `--model` - Specify the model to use (default: `llama3.2`).
 - `--agent` - Define the agent's description (default: `You are a helpful assistant.`).
+- `--upload` - Upload a file to the chat session. The file must be placed in the `storage/app/private/cli/` directory.
 - `--i` - Enable interactive mode (default: `false`).
 - `--f` - Return formatted responses (default: `false`).
+
+#### `llama:chat:list`
+
+List and continue previous chat sessions.
+
+```bash
+php artisan llama:chat:list --limit=10
+```
+
+**Options:**
+
+- `--limit` - Number of recent chats to display (default: `10`).
 
 #### `llama:ask`
 
@@ -66,25 +81,18 @@ php artisan llama:ask --model=llama3.2 --agent="You are a helpful assistant."
 - `--model` - Specify the model to use (default: `llama3.2`).
 - `--agent` - Define the agent's description (default: `You are a helpful assistant.`).
 
-#### `llama:model:list`
+#### `llama:model`
 
-List all available (downloaded) models.
-
-```bash
-php artisan llama:model:list
-```
-
-#### `llama:model:show`
-
-Show detailed information about a specific model.
+Interactively list models and view model information.
 
 ```bash
-php artisan llama:model:show --model=<model_name>
+php artisan llama:model
 ```
 
-**Options:**
+This command provides an interactive interface to:
 
-- `--model` - Specify the model name. If omitted, you will be prompted to enter it.
+- List all available (downloaded) models with their details
+- Show detailed information about a specific model
 
 ---
 
@@ -98,10 +106,10 @@ Follow these steps to set up the application:
     git clone [repository]
     ```
 
-2. Navigate to the project directory:
+2. Install dependencies:
 
     ```bash
-    cd llama-chat
+    composer install
     ```
 
 3. Copy the environment file:
